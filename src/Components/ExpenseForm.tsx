@@ -17,7 +17,7 @@ export default function ExpenseForm() {
     })
     const [error,setError]=useState("")
 
-    const {dispatch,state} =useBudget()
+    const {dispatch,state,remainingBudget} =useBudget()
 
     useEffect(()=>{
         if(state.editingId){
@@ -51,6 +51,12 @@ export default function ExpenseForm() {
             setError("All fields are mandatory. ")
             return
         }
+
+        if(expense.amount>remainingBudget){
+            setError("expense budget exceeded ")
+            return
+        }
+
         if(state.editingId){
             dispatch({type:"update-expense",payload:{expense :{id:state.editingId,...expense}}})
         }else{
