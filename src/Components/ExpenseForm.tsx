@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { DraftExpense, Value } from "../types";
 import { categories } from "../data/categories";
 import DatePicker from 'react-date-picker';
@@ -17,7 +17,17 @@ export default function ExpenseForm() {
     })
     const [error,setError]=useState("")
 
-    const {dispatch} =useBudget()
+    const {dispatch,state} =useBudget()
+
+    useEffect(()=>{
+        if(state.editingId){
+            const editingExpense =state.expenses.find(current=>current.id===state.editingId)
+            if(editingExpense){
+                setExpense(editingExpense)
+            }
+           
+        }
+    },[state.editingId])
     
     const HandleChange=(e:React.ChangeEvent<HTMLInputElement | HTMLSelectElement>)=>{
         const {name,value}= e.target
@@ -41,7 +51,12 @@ export default function ExpenseForm() {
             setError("All fields are mandatory. ")
             return
         }
-        dispatch({type:"add-expense",payload:{expense}})
+        if(state.editingId){
+            dispatch({type:"update-expense",payload:{expense :{id:state.editingId,...expense}}})
+        }else{
+            dispatch({type:"add-expense",payload:{expense}})
+        }
+        
 
         setExpense({
             amount:0,
@@ -54,7 +69,7 @@ export default function ExpenseForm() {
   return (
     <form  className="space-y-5" onSubmit={handleSubmit}>
         <legend className="uppercase text-center text-2xl font-black border-b-4 border-blue-500 py-2">
-            New Spent
+            {state.editingId? "Edit Expense": "New Expenses"}
         </legend>
         {error && <ErrorMessage>{error}</ErrorMessage>}
         <div className="flex flex-col gap-2">
@@ -107,7 +122,7 @@ export default function ExpenseForm() {
         <input 
             type="submit" 
             className="bg-blue-600 cursor-pointer w-full p-2 text-white uppercase font-bold rounded-lg"
-            value={"Register Spent"}    
+            value={state.editingId? "Save Changes": "Register Expense"}  
         />
     </form>
   )
