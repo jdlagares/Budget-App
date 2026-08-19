@@ -42,6 +42,13 @@ export default function ExpenseForm() {
             return
         }
         dispatch({type:"add-expense",payload:{expense}})
+
+        setExpense({
+            amount:0,
+            expenseName:"",
+            category:"",
+            date :new Date()
+        })
     }
 
   return (
@@ -58,6 +65,7 @@ export default function ExpenseForm() {
             placeholder="Add the spent name" 
             className="bg-slate-100 p-2" 
             name="expenseName" 
+            value={expense.expenseName}
             onChange={HandleChange}
             />
         </div>
@@ -69,6 +77,7 @@ export default function ExpenseForm() {
             placeholder="Add the amount ex. 300" 
             className="bg-slate-100 p-2" 
             name="amount" 
+            value={expense.amount}
             onChange={HandleChange}
             />
         </div>
@@ -78,6 +87,7 @@ export default function ExpenseForm() {
             id="category" 
             className="bg-slate-100 p-2" 
             name="category" 
+            value={expense.category}
             onChange={HandleChange}
             >
                 <option value="">--Selection--</option>
