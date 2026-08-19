@@ -16,7 +16,7 @@ export const BudgetReducer= (
         if(action.type==="add-Budget"){
             return{
                 ...state,
-                Budget: action.payload.budget
+                budget: action.payload.budget
             }
         }
         return state
