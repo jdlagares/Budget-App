@@ -16,7 +16,7 @@ export default function ExpenseForm() {
         date :new Date()
     })
     const [error,setError]=useState("")
-
+    const [previousAmount, setPreviousAmount]=useState(0)
     const {dispatch,state,remainingBudget} =useBudget()
 
     useEffect(()=>{
@@ -24,6 +24,7 @@ export default function ExpenseForm() {
             const editingExpense =state.expenses.find(current=>current.id===state.editingId)
             if(editingExpense){
                 setExpense(editingExpense)
+                setPreviousAmount(editingExpense.amount)
             }
            
         }
@@ -52,7 +53,7 @@ export default function ExpenseForm() {
             return
         }
 
-        if(expense.amount>remainingBudget){
+        if((expense.amount-previousAmount)>remainingBudget){
             setError("expense budget exceeded ")
             return
         }
@@ -70,6 +71,7 @@ export default function ExpenseForm() {
             category:"",
             date :new Date()
         })
+        setPreviousAmount(0)
     }
 
   return (
